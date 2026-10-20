@@ -38,7 +38,7 @@ lib/
 ### Gereksinimler
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (stable)
-- iOS için: macOS + Xcode + iOS Simülatörü
+
 - Android için: Android Studio + emülatör
 - Çalışan bir [DeskFlow Web API](https://github.com/ikramirzayev/DeskFlow)
 
@@ -57,7 +57,7 @@ Varsayılan adres `http://localhost:5137`'dir. Farklı bir adres için:
 
 | Ortam | Komut |
 |---|---|
-| iOS Simülatörü | `flutter run` (localhost çalışır) |
+
 | Android emülatörü | `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5137` |
 | Gerçek cihaz | `flutter run --dart-define=API_BASE_URL=http://BILGISAYAR_IP:5137` |
 
