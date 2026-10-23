@@ -1,8 +1,10 @@
-# DeskFlow Mobile
+# DeskFlow
 
-DeskFlow kütüphane masa rezervasyon sisteminin **Flutter ile geliştirilen iOS uygulaması** (aynı kodla Android'de de çalışır).
+**Akıllı Çalışma Alanı ve Kütüphane Masa Rezervasyon Uygulaması**
 
-Uygulama, ASP.NET Core ile geliştirilen [DeskFlow Web API](https://github.com/ikramirzayev/DeskFlow)'sini kullanır; kendi veritabanı yoktur.
+DeskFlow; kütüphane ve çalışma salonlarındaki masaların doluluğunun kat planı üzerinde izlendiği, masaların önceden rezerve edildiği ve masadaki QR kod okutularak check-in yapıldığı bir mobil uygulamadır.
+
+> BLM4587 IOS İle Mobil Uygulama Geliştirme I (Flutter) – 2026–2027 Güz dönem projesi
 
 ## Ekip
 
@@ -12,54 +14,81 @@ Uygulama, ASP.NET Core ile geliştirilen [DeskFlow Web API](https://github.com/i
 | Ali KARA | [@Ali-kara-hub](https://github.com/Ali-kara-hub) |
 | Zeynep Şevval YILDIZ | [@zyldzz](https://github.com/zyldzz) |
 
-## Özellikler (planlanan)
-
-- Giriş ve kayıt (JWT)
-- Salon listesi ve kat planı üzerinde anlık masa doluluğu
-- Masa rezervasyonu ve "Rezervasyonlarım" ekranı
-- QR kod okutarak check-in / check-out
-- Rezervasyon hatırlatma bildirimleri
-
-## Klasör yapısı
+## Depo yapısı
 
 ```
-lib/
-├── main.dart          # Giriş noktası
-├── app.dart           # MaterialApp, tema ve başlangıç ekranı
-├── core/              # Ayarlar ve sabitler (API adresi vb.)
-├── models/            # Veri modelleri (Salon, Masa, Rezervasyon...)
-├── services/          # API çağrıları
-├── screens/           # Ekranlar
-└── widgets/           # Tekrar kullanılan arayüz parçaları
+DeskFlow-Mobile/
+├── api/       # ASP.NET Core Web API (C#, EF Core, PostgreSQL, JWT)
+└── mobile/    # Flutter (Dart) Android uygulaması
 ```
 
-## Kurulum
+Mobil uygulama veritabanına doğrudan bağlanmaz; tüm verilere `api/` içindeki Web API üzerinden erişir.
+
+## Teknolojiler
+
+| Parça | Teknoloji |
+|---|---|
+| Web API | ASP.NET Core Web API, Entity Framework Core, PostgreSQL (Npgsql), Identity + JWT, Swagger |
+| Mobil | Flutter (Dart), provider, go_router, dio, flutter_secure_storage, mobile_scanner |
+| Platform | Android |
+
+---
+
+## 1. Web API (`api/`)
 
 ### Gereksinimler
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (stable)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- [PostgreSQL](https://www.postgresql.org/download/) (16 veya üzeri)
+- EF Core aracı: `dotnet tool install --global dotnet-ef`
 
-- Android için: Android Studio + emülatör
-- Çalışan bir [DeskFlow Web API](https://github.com/ikramirzayev/DeskFlow)
+### Veritabanı bağlantısı
+
+Şifre, bağlantı dizesi ve JWT anahtarı **depoya konmaz**. Her geliştirici kendi bilgisayarında [User Secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) ile ayarlar:
+
+```bash
+cd api/DeskFlow.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=deskflow_mobile;Username=postgres;Password=SIFRENIZ"
+```
+
+### Migration ve çalıştırma
+
+```bash
+dotnet ef database update
+dotnet run
+```
+
+API `http://localhost:5137` adresinde çalışır. Swagger: `http://localhost:5137/swagger`
+
+> Not: Web API projesi 1. haftada, migration'lar 2. haftada eklenecektir.
+
+---
+
+## 2. Mobil uygulama (`mobile/`)
+
+### Gereksinimler
+
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) – stable kanal, **3.x** (`flutter --version` ile kontrol edin)
+- Android Studio ve bir Android emülatörü (ya da USB hata ayıklaması açık bir Android telefon)
 
 ### Çalıştırma
 
 ```bash
-git clone https://github.com/ikramirzayev/DeskFlow-Mobile.git
-cd DeskFlow-Mobile
+cd mobile
 flutter pub get
 flutter run
 ```
 
-### API adresi
+### API adresinin ayarlanması
 
-Varsayılan adres `http://localhost:5137`'dir. Farklı bir adres için:
+Adres `mobile/lib/core/config.dart` içindedir ve çalıştırırken değiştirilebilir:
 
 | Ortam | Komut |
 |---|---|
+| Android emülatörü (varsayılan) | `flutter run` → `http://10.0.2.2:5137` |
+| Gerçek Android cihaz | `flutter run --dart-define=API_BASE_URL=http://BILGISAYAR_IP:5137` |
 
-| Android emülatörü | `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:5137` |
-| Gerçek cihaz | `flutter run --dart-define=API_BASE_URL=http://BILGISAYAR_IP:5137` |
+Gerçek cihazda telefon ve bilgisayar aynı Wi-Fi ağında olmalıdır; bilgisayarın IP adresi `ipconfig` ile bulunur.
 
 ### Test
 
@@ -68,8 +97,11 @@ flutter analyze
 flutter test
 ```
 
+---
+
 ## Çalışma kuralları
 
 - Herkes kendi GitHub hesabıyla commit ve push yapar.
 - Her iş ayrı dalda yapılır (`isim/is-adi`) ve `main`'e Pull Request ile girer.
-- İşe başlamadan önce `git pull`.
+- İşe başlamadan önce `git checkout main` ve `git pull`.
+- Şifre, bağlantı dizesi, JWT anahtarı gibi bilgiler asla commit edilmez.
