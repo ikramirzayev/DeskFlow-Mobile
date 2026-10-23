@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'screens/home_screen.dart';
+import "core/theme.dart";
+import 'screens/splash_screen.dart';
 
 class DeskFlowApp extends StatelessWidget {
   const DeskFlowApp({super.key});
@@ -10,11 +11,8 @@ class DeskFlowApp extends StatelessWidget {
     return MaterialApp(
       title: 'DeskFlow',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
-        useMaterial3: true,
-      ),
-      home: const HomeScreen(),
+      theme: AppTheme.light,
+      home: const SplashScreen(),
     );
   }
 }
