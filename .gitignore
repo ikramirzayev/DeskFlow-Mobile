@@ -480,3 +480,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+.dart_tool/
+/build/
+/ios/
+/macos/
+*.iml
