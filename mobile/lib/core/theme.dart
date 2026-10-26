@@ -11,5 +11,11 @@ class AppTheme {
       backgroundColor: primary,
       foregroundColor: Colors.white,
     ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        backgroundColor: accent,
+        foregroundColor: Colors.white,
+      ),
+    ),
   );
 }
