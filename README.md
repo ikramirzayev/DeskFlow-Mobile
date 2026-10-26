@@ -49,7 +49,22 @@ Mobil uygulama veritabanına doğrudan bağlanmaz; tüm verilere `api/` içindek
 ```bash
 cd api/DeskFlow.Api
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=deskflow_mobile;Username=postgres;Password=SIFRENIZ"
+dotnet user-secrets set "Jwt:Key" "en-az-32-karakterlik-uzun-ve-rastgele-bir-anahtar-yazin"
+dotnet user-secrets set "VarsayilanYonetici:Sifre" "yonetici1"
 ```
+
+- `Jwt:Key`: JWT token'larını imzalayan gizli anahtar, **en az 32 karakter**. Ayarlanmazsa API başlamaz.
+- İlk açılışta `Yonetici` ve `Ogrenci` rolleri ile `yonetici@deskflow.local` adresli yönetici hesabı otomatik oluşturulur.
+
+### Kimlik doğrulama uç noktaları
+
+| Yöntem | Adres | Açıklama |
+|---|---|---|
+| POST | `/api/auth/kayit` | Öğrenci olarak kayıt olur, token döner |
+| POST | `/api/auth/giris` | E-posta ve şifreyle giriş, token döner |
+| GET | `/api/auth/ben` | Token sahibinin bilgileri (`Authorization: Bearer <token>`) |
+
+İstekler `api/DeskFlow.Api/DeskFlow.Api.http` dosyasından VS Code **REST Client** eklentisiyle denenebilir.
 
 ### Migration ve çalıştırma
 

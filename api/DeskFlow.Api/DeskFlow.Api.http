@@ -1,0 +1,40 @@
+@api = http://localhost:5137
+
+### 1) Kayıt ol (Öğrenci rolüyle)
+POST {{api}}/api/auth/kayit
+Content-Type: application/json
+
+{
+  "ad": "Deneme",
+  "soyad": "Öğrenci",
+  "ogrenciNo": "23290000",
+  "email": "deneme@ogr.edu.tr",
+  "sifre": "deneme1"
+}
+
+### 2) Giriş yap -> token döner
+# @name giris
+POST {{api}}/api/auth/giris
+Content-Type: application/json
+
+{
+  "email": "deneme@ogr.edu.tr",
+  "sifre": "deneme1"
+}
+
+### 3) Token ile kim olduğumu sor
+GET {{api}}/api/auth/ben
+Authorization: Bearer {{giris.response.body.token}}
+
+### 4) Token olmadan -> 401 dönmeli
+GET {{api}}/api/auth/ben
+
+### 5) Hatalı form -> 400 ve doğrulama mesajları dönmeli
+POST {{api}}/api/auth/kayit
+Content-Type: application/json
+
+{
+  "ad": "",
+  "email": "eposta-degil",
+  "sifre": "123"
+}
