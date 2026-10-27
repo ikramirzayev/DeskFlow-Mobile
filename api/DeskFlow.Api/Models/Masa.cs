@@ -29,4 +29,6 @@ public class Masa
     public bool AktifMi { get; set; } = true;
 
     public Salon Salon { get; set; } = null!;
+
+    public List<Rezervasyon> Rezervasyonlar { get; set; } = new();
 }
