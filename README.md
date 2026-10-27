@@ -75,7 +75,7 @@ dotnet run
 
 API `http://localhost:5137` adresinde çalışır. Swagger: `http://localhost:5137/swagger`
 
-> Not: Web API projesi 1. haftada, migration'lar 2. haftada eklenecektir.
+> Not: `IlkMigration` ile `AspNetUsers`, `Salonlar`, `Masalar`, `Rezervasyonlar` ve `CheckInKayitlari` tabloları oluşturulur; örnek olarak 2 salon ve 10 masa eklenir.
 
 ---
 
