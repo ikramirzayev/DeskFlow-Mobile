@@ -64,6 +64,19 @@ dotnet user-secrets set "VarsayilanYonetici:Sifre" "yonetici1"
 | POST | `/api/auth/giris` | E-posta ve şifreyle giriş, token döner |
 | GET | `/api/auth/ben` | Token sahibinin bilgileri (`Authorization: Bearer <token>`) |
 
+### Salon uç noktaları
+
+| Yöntem | Adres | Yetki | Açıklama |
+|---|---|---|---|
+| GET | `/api/salonlar` | Giriş yapmış herkes | Salon listesi (`masaSayisi` dahil) |
+| GET | `/api/salonlar/{id}` | Giriş yapmış herkes | Tek salon, bulunamazsa 404 |
+| POST | `/api/salonlar` | Yönetici | Salon ekler, 201 Created döner |
+| PUT | `/api/salonlar/{id}` | Yönetici | Salonu günceller |
+| DELETE | `/api/salonlar/{id}` | Yönetici | Salonu (ve masalarını) siler; rezervasyon varsa 409 |
+
+Kapanış saati açılış saatinden önceyse 400 döner. Öğrenci token'ıyla POST/PUT/DELETE 403 döner.
+Swagger sayfasındaki **Authorize** butonuna giriş token'ı yapıştırılarak korumalı uç noktalar denenebilir.
+
 İstekler `api/DeskFlow.Api/DeskFlow.Api.http` dosyasından VS Code **REST Client** eklentisiyle denenebilir.
 
 ### Migration ve çalıştırma
