@@ -38,3 +38,91 @@ Content-Type: application/json
   "email": "eposta-degil",
   "sifre": "123"
 }
+
+### ---------- Salonlar ----------
+
+### 6) Yönetici girişi -> token döner
+# @name yoneticiGiris
+POST {{api}}/api/auth/giris
+Content-Type: application/json
+
+{
+  "email": "yonetici@deskflow.local",
+  "sifre": "yonetici1"
+}
+
+### 7) Salonları listele (giriş yapmış herkes) -> 200
+GET {{api}}/api/salonlar
+Authorization: Bearer {{giris.response.body.token}}
+
+### 8) Token olmadan listele -> 401 dönmeli
+GET {{api}}/api/salonlar
+
+### 9) Öğrenci token'ıyla salon ekle -> 403 dönmeli
+POST {{api}}/api/salonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "ad": "Deneme Salonu",
+  "kat": 1,
+  "kapasite": 30,
+  "acilisSaati": "08:00:00",
+  "kapanisSaati": "22:00:00",
+  "aktifMi": true
+}
+
+### 10) Yönetici token'ıyla salon ekle -> 201 dönmeli
+# @name yeniSalon
+POST {{api}}/api/salonlar
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "ad": "Deneme Salonu",
+  "kat": 1,
+  "kapasite": 30,
+  "acilisSaati": "08:00:00",
+  "kapanisSaati": "22:00:00",
+  "aktifMi": true
+}
+
+### 11) Kapanış saati açılıştan önce -> 400 dönmeli
+POST {{api}}/api/salonlar
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "ad": "Hatalı Salon",
+  "kat": 1,
+  "kapasite": 30,
+  "acilisSaati": "22:00:00",
+  "kapanisSaati": "08:00:00",
+  "aktifMi": true
+}
+
+### 12) Tek salon getir -> 200 (olmayan id için 404)
+GET {{api}}/api/salonlar/{{yeniSalon.response.body.id}}
+Authorization: Bearer {{giris.response.body.token}}
+
+### 13) Salonu güncelle (yönetici) -> 200
+PUT {{api}}/api/salonlar/{{yeniSalon.response.body.id}}
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "ad": "Deneme Salonu (güncel)",
+  "kat": 2,
+  "kapasite": 40,
+  "acilisSaati": "09:00:00",
+  "kapanisSaati": "23:00:00",
+  "aktifMi": true
+}
+
+### 14) Olmayan salon -> 404 dönmeli
+GET {{api}}/api/salonlar/9999
+Authorization: Bearer {{giris.response.body.token}}
+
+### 15) Salonu sil (yönetici) -> 204 dönmeli
+DELETE {{api}}/api/salonlar/{{yeniSalon.response.body.id}}
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
