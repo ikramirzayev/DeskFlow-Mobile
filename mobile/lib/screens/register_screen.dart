@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -25,6 +28,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _confirmController.dispose();
     super.dispose();
+  }
+
+  bool _yukleniyor = false;
+
+  Future<void> _kayitOl() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _yukleniyor = true);
+    try {
+      await context.read<AuthProvider>().kayit(
+            ad: _nameController.text.trim(),
+            soyad: _surnameController.text.trim(),
+            ogrenciNo: _studentNoController.text.trim(),
+            email: _emailController.text.trim(),
+            sifre: _passwordController.text,
+          );
+      if (!mounted) return;
+      // Kayıt olan kullanıcı otomatik giriş yapmış olur; giriş ekranına dönünce
+      // app.dart'taki yönlendirici ana ekranı gösterir.
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) setState(() => _yukleniyor = false);
+    }
   }
 
   String? _required(String? value, String message) {
@@ -68,7 +99,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   labelText: 'Öğrenci No',
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => _required(v, 'Öğrenci no boş olamaz'),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) {
+                    return 'Öğrenci no boş olamaz';
+                  }
+                  // API ile aynı kural: 8–11 haneli sayı.
+                  if (!RegExp(r'^\d{8,11}$').hasMatch(v.trim())) {
+                    return 'Öğrenci no 8–11 haneli bir sayı olmalı';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -122,15 +162,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Kayıt başarılı')),
-                      );
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text('Kayıt Ol'),
+                  onPressed: _yukleniyor ? null : _kayitOl,
+                  child: _yukleniyor
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Kayıt Ol'),
                 ),
               ),
             ],

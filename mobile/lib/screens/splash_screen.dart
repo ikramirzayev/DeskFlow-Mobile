@@ -1,4 +1,3 @@
-import 'package:deskflow_mobile/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
@@ -18,17 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) setState(() => _visible = true);
-    });
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 600),
-          pageBuilder: (_, __, ___) => const LoginScreen(),
-          transitionsBuilder: (_, animation, __, child) =>
-              FadeTransition(opacity: animation, child: child),
-        ),
-      );
     });
   }
 
