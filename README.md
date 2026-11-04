@@ -101,11 +101,15 @@ API `http://localhost:5137` adresinde çalışır. Swagger: `http://localhost:51
 
 ### Çalıştırma
 
+Önce Web API'yi başlatın (`api/DeskFlow.Api` klasöründe `dotnet run`), sonra:
+
 ```bash
 cd mobile
 flutter pub get
 flutter run
 ```
+
+Uygulama açılışta cihazda saklı bir oturum varsa doğrudan ana ekrana geçer; yoksa giriş ekranını gösterir. Giriş ve kayıt `/api/auth` uç noktalarını kullanır, JWT cihazda `flutter_secure_storage` ile şifreli saklanır.
 
 ### API adresinin ayarlanması
 

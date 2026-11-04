@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
 
-import 'main_shell.dart';
+import '../providers/auth_provider.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,6 +16,27 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _yukleniyor = false;
+
+  Future<void> _girisYap() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _yukleniyor = true);
+    try {
+      await context.read<AuthProvider>().giris(
+            _emailController.text.trim(),
+            _passwordController.text,
+          );
+      // Başarılı girişte ana ekrana app.dart'taki yönlendirici geçirir.
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      if (mounted) setState(() => _yukleniyor = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -80,14 +102,14 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const MainShell()),
-                      );
-                    }
-                  },
-                  child: const Text('Giriş Yap'),
+                  onPressed: _yukleniyor ? null : _girisYap,
+                  child: _yukleniyor
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Giriş Yap'),
                 ),
               ),
               const SizedBox(height: 16),
