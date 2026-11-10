@@ -75,6 +75,18 @@ dotnet user-secrets set "VarsayilanYonetici:Sifre" "yonetici1"
 | DELETE | `/api/salonlar/{id}` | Yönetici | Salonu (ve masalarını) siler; rezervasyon varsa 409 |
 
 Kapanış saati açılış saatinden önceyse 400 döner. Öğrenci token'ıyla POST/PUT/DELETE 403 döner.
+
+### Masa uç noktaları
+
+| Yöntem | Adres | Yetki | Açıklama |
+|---|---|---|---|
+| GET | `/api/masalar` | Giriş yapmış herkes | Masa listesi. Filtreler: `?salonId=1&prizli=true&sessiz=true` |
+| GET | `/api/masalar/{id}` | Giriş yapmış herkes | Tek masa, bulunamazsa 404 |
+| POST | `/api/masalar` | Yönetici | Masa ekler (201). QR kod otomatik üretilir (`DESKFLOW-S{salonId}-{masaNo}`) |
+| PUT | `/api/masalar/{id}` | Yönetici | Masayı günceller (QR kod değişmez) |
+| DELETE | `/api/masalar/{id}` | Yönetici | Masayı siler (204). Rezervasyonu varsa 409 |
+
+Aynı salonda aynı masa numarası varsa veya salon bulunamazsa 400 döner. Öğrenci token'ıyla POST/PUT/DELETE 403 döner.
 Swagger sayfasındaki **Authorize** butonuna giriş token'ı yapıştırılarak korumalı uç noktalar denenebilir.
 
 İstekler `api/DeskFlow.Api/DeskFlow.Api.http` dosyasından VS Code **REST Client** eklentisiyle denenebilir.
