@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../core/router.dart';
 
 import '../models/salon.dart';
 import '../services/api_service.dart';
@@ -110,22 +113,26 @@ class _SalonKarti extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(child: Text(salon.ad, style: textTheme.titleMedium)),
-                _Rozet(aktif: salon.aktifMi),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text('Kat: ${salon.kat}'),
-            Text('Saat: ${salon.acilisSaati} – ${salon.kapanisSaati}'),
-            Text('Masa sayısı: ${salon.masaSayisi}'),
-          ],
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push(Adresler.salon(salon.id)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Text(salon.ad, style: textTheme.titleMedium)),
+                  _Rozet(aktif: salon.aktifMi),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text('Kat: ${salon.kat}'),
+              Text('Saat: ${salon.acilisSaati} – ${salon.kapanisSaati}'),
+              Text('Masa sayısı: ${salon.masaSayisi}'),
+            ],
+          ),
         ),
       ),
     );

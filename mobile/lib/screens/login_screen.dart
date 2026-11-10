@@ -1,8 +1,9 @@
 import "package:flutter/material.dart";
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../core/router.dart';
 import '../providers/auth_provider.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -115,9 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                  );
+                  context.push(Adresler.kayit);
                 },
                 child: const Text('Hesabın yok mu? Kayıt ol'),
               ),

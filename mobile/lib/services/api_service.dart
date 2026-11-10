@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../core/config.dart';
 
-/// API'den dönen hatayı kullanıcıya gösterilecek Türkçe bir mesajla taşır.
+
 class ApiHatasi implements Exception {
   final String mesaj;
   final int? durumKodu;
@@ -13,14 +13,13 @@ class ApiHatasi implements Exception {
   String toString() => mesaj;
 }
 
-/// Bütün HTTP istekleri bu sınıftan geçer.
-/// Token varsa her isteğe "Authorization: Bearer ..." başlığını ekler.
+
 class ApiService {
   final Dio dio;
 
   String? _token;
 
-  /// Token'lı bir istek 401 dönerse çağrılır (oturum düşürülür).
+
   void Function()? oturumDustu;
 
   ApiService({Dio? dio})
@@ -56,7 +55,6 @@ class ApiService {
 
   void tokenAyarla(String? token) => _token = token;
 
-  /// DioException'ı kullanıcıya gösterilecek bir mesaja çevirir.
   static ApiHatasi hataCevir(Object hata) {
     if (hata is ApiHatasi) return hata;
     if (hata is! DioException) {
