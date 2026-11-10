@@ -126,3 +126,105 @@ Authorization: Bearer {{giris.response.body.token}}
 ### 15) Salonu sil (yönetici) -> 204 dönmeli
 DELETE {{api}}/api/salonlar/{{yeniSalon.response.body.id}}
 Authorization: Bearer {{yoneticiGiris.response.body.token}}
+
+### ---------- Masalar ----------
+# Önce 1) kayıt, 2) giriş (öğrenci) ve 6) yönetici girişi istekleri çalıştırılmış olmalı.
+
+### 16) Masaları listele (giriş yapmış herkes) -> 200
+GET {{api}}/api/masalar
+Authorization: Bearer {{giris.response.body.token}}
+
+### 17) Filtrele: 1. salon, prizli ve sessiz masalar -> 200
+GET {{api}}/api/masalar?salonId=1&prizli=true&sessiz=true
+Authorization: Bearer {{giris.response.body.token}}
+
+### 18) Token olmadan listele -> 401 dönmeli
+GET {{api}}/api/masalar
+
+### 19) Tek masa getir -> 200 (olmayan id için 404)
+GET {{api}}/api/masalar/1
+Authorization: Bearer {{giris.response.body.token}}
+
+### 20) Olmayan masa -> 404 dönmeli
+GET {{api}}/api/masalar/9999
+Authorization: Bearer {{giris.response.body.token}}
+
+### 21) Öğrenci token'ıyla masa ekle -> 403 dönmeli
+POST {{api}}/api/masalar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaNo": "T1",
+  "salonId": 1,
+  "x": 9.0,
+  "y": 9.0,
+  "prizliMi": true,
+  "sessizBolgeMi": false,
+  "aktifMi": true
+}
+
+### 22) Yönetici token'ıyla masa ekle -> 201 dönmeli (QR kod otomatik üretilir)
+# @name yeniMasa
+POST {{api}}/api/masalar
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaNo": "T1",
+  "salonId": 1,
+  "x": 9.0,
+  "y": 9.0,
+  "prizliMi": true,
+  "sessizBolgeMi": false,
+  "aktifMi": true
+}
+
+### 23) Aynı salonda aynı masa numarası -> 400 dönmeli
+POST {{api}}/api/masalar
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaNo": "T1",
+  "salonId": 1,
+  "x": 8.0,
+  "y": 8.0,
+  "prizliMi": false,
+  "sessizBolgeMi": false,
+  "aktifMi": true
+}
+
+### 24) Olmayan salon -> 400 dönmeli
+POST {{api}}/api/masalar
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaNo": "T2",
+  "salonId": 9999,
+  "x": 1.0,
+  "y": 1.0,
+  "prizliMi": false,
+  "sessizBolgeMi": false,
+  "aktifMi": true
+}
+
+### 25) Masayı güncelle (yönetici) -> 200
+PUT {{api}}/api/masalar/{{yeniMasa.response.body.id}}
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaNo": "T1",
+  "salonId": 1,
+  "x": 9.5,
+  "y": 9.5,
+  "prizliMi": true,
+  "sessizBolgeMi": true,
+  "aktifMi": true
+}
+
+### 26) Masayı sil (yönetici) -> 204 dönmeli
+DELETE {{api}}/api/masalar/{{yeniMasa.response.body.id}}
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
