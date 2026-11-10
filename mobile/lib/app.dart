@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'core/router.dart';
 import 'core/theme.dart';
 import 'providers/auth_provider.dart';
-import 'screens/login_screen.dart';
-import 'screens/main_shell.dart';
-import 'screens/splash_screen.dart';
 import 'services/api_service.dart';
 import 'services/token_store.dart';
 
 class DeskFlowApp extends StatelessWidget {
-  const DeskFlowApp({super.key, this.tokenStore});
+  const DeskFlowApp({super.key, this.tokenStore, this.apiService});
 
   /// Testlerde sahte bir depo verilebilir; verilmezse gerçek şifreli depo kullanılır.
   final TokenStore? tokenStore;
+
+  /// Testlerde sahte cevap dönen bir API servisi verilebilir.
+  final ApiService? apiService;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<ApiService>(create: (_) => ApiService()),
+        Provider<ApiService>(create: (_) => apiService ?? ApiService()),
         Provider<TokenStore>(create: (_) => tokenStore ?? TokenStore()),
         ChangeNotifierProvider<AuthProvider>(
           create: (context) => AuthProvider(
@@ -28,33 +30,40 @@ class DeskFlowApp extends StatelessWidget {
           )..baslat(),
         ),
       ],
-      child: MaterialApp(
-        title: 'DeskFlow',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        home: const _OturumYonlendirici(),
-      ),
+      child: const _Uygulama(),
     );
   }
 }
 
-/// Oturum durumuna göre açılış, giriş ya da ana ekranı gösterir.
-class _OturumYonlendirici extends StatelessWidget {
-  const _OturumYonlendirici();
+class _Uygulama extends StatefulWidget {
+  const _Uygulama();
+
+  @override
+  State<_Uygulama> createState() => _UygulamaState();
+}
+
+class _UygulamaState extends State<_Uygulama> {
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = routerOlustur(context.read<AuthProvider>());
+  }
+
+  @override
+  void dispose() {
+    _router.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final durum = context.watch<AuthProvider>().durum;
-
-    final Widget ekran = switch (durum) {
-      OturumDurumu.baslatiliyor => const SplashScreen(),
-      OturumDurumu.girisYapildi => const MainShell(),
-      OturumDurumu.girisYapilmadi => const LoginScreen(),
-    };
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      child: KeyedSubtree(key: ValueKey(durum), child: ekran),
+    return MaterialApp.router(
+      title: 'DeskFlow',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      routerConfig: _router,
     );
   }
 }

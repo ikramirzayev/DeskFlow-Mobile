@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/oturum.dart';
 
-/// Oturumu (JWT dahil) cihazda şifreli olarak saklar.
 class TokenStore {
   static const _anahtar = 'deskflow_oturum';
 
