@@ -44,10 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             email: _emailController.text.trim(),
             sifre: _passwordController.text,
           );
-      if (!mounted) return;
-      // Kayıt olan kullanıcı otomatik giriş yapmış olur; giriş ekranına dönünce
-      // app.dart'taki yönlendirici ana ekranı gösterir.
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      // Kayıt olan kullanıcı otomatik giriş yapmış olur; router ana sayfaya yönlendirir.
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
