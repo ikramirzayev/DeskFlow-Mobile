@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../models/masa.dart';
 import '../services/api_service.dart';
-import 'masa_detay_screen.dart';
+
+import 'package:go_router/go_router.dart';
 
 class MasaListScreen extends StatefulWidget {
   final int salonId;
@@ -155,9 +156,7 @@ class _MasaKarti extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => MasaDetayScreen(masaId: masa.id)),
-        ),
+        onTap: () => context.push('/masalar/${masa.id}'),
         title: Text('Masa ${masa.masaNo}'),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
