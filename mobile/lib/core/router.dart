@@ -6,6 +6,8 @@ import '../screens/login_screen.dart';
 import '../screens/main_shell.dart';
 import '../screens/register_screen.dart';
 import '../screens/splash_screen.dart';
+import '../screens/masa_detay_screen.dart';
+import '../screens/masa_list_screen.dart';
 
 /// Uygulamanın bütün adresleri.
 abstract final class Adresler {
@@ -80,20 +82,14 @@ GoRouter routerOlustur(AuthProvider auth) {
         path: '/salonlar/:salonId',
         builder: (context, state) {
           final salonId = int.parse(state.pathParameters['salonId']!);
-          return GeciciEkran(
-            baslik: 'Masalar',
-            mesaj: 'Salon $salonId masaları bu hafta eklenecek.',
-          );
+          return MasaListScreen(salonId: salonId);
         },
       ),
       GoRoute(
         path: '/masalar/:masaId',
         builder: (context, state) {
           final masaId = int.parse(state.pathParameters['masaId']!);
-          return GeciciEkran(
-            baslik: 'Masa Detayı',
-            mesaj: 'Masa $masaId detayı bu hafta eklenecek.',
-          );
+          return MasaDetayScreen(masaId: masaId);
         },
       ),
       // Yönetim ekranları 5. haftada yapılacak; adresler şimdiden korunuyor.
