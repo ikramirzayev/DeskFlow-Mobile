@@ -4,7 +4,10 @@ import '../providers/auth_provider.dart';
 import '../screens/gecici_ekran.dart';
 import '../screens/login_screen.dart';
 import '../screens/main_shell.dart';
+import '../models/salon.dart';
 import '../screens/register_screen.dart';
+import '../screens/salon_form_screen.dart';
+import '../screens/salon_yonetim_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/masa_detay_screen.dart';
 import '../screens/masa_list_screen.dart';
@@ -18,6 +21,8 @@ abstract final class Adresler {
   static String salon(int salonId) => '/salonlar/$salonId';
   static String masa(int masaId) => '/masalar/$masaId';
   static const salonYonetimi = '/yonetim/salonlar';
+  static const salonEkle = '/yonetim/salonlar/yeni';
+  static String salonDuzenle(int salonId) => '/yonetim/salonlar/$salonId';
   static const masaYonetimi = '/yonetim/masalar';
 }
 
@@ -92,13 +97,26 @@ GoRouter routerOlustur(AuthProvider auth) {
           return MasaDetayScreen(masaId: masaId);
         },
       ),
-      // Yönetim ekranları 5. haftada yapılacak; adresler şimdiden korunuyor.
+      // /yonetim ile başlayan adresler oturumYonlendirmesi'nde sadece yöneticiye açık.
       GoRoute(
         path: Adresler.salonYonetimi,
-        builder: (context, state) => const GeciciEkran(
-          baslik: 'Salon Yönetimi',
-          mesaj: 'Salon ekleme, düzenleme ve silme 5. haftada eklenecek.',
-        ),
+        builder: (context, state) => const SalonYonetimScreen(),
+        routes: [
+          // 'yeni' önce gelmeli; yoksa ':salonId' onu sayı sanıp yakalardı.
+          GoRoute(
+            path: 'yeni',
+            builder: (context, state) => const SalonFormScreen(),
+          ),
+          GoRoute(
+            path: ':salonId',
+            // Düzenlenecek salon listeden 'extra' ile gelir; gelmediyse (ör. uygulama
+            // yeniden başlatıldıysa) listeye dön, yanlışlıkla yeni salon eklenmesin.
+            redirect: (context, state) =>
+                state.extra is Salon ? null : Adresler.salonYonetimi,
+            builder: (context, state) =>
+                SalonFormScreen(salon: state.extra as Salon?),
+          ),
+        ],
       ),
       GoRoute(
         path: Adresler.masaYonetimi,
