@@ -11,6 +11,7 @@ import '../screens/salon_yonetim_screen.dart';
 import '../screens/splash_screen.dart';
 import '../screens/masa_detay_screen.dart';
 import '../screens/masa_list_screen.dart';
+import '../screens/rezervasyon_olustur_screen.dart';
 
 /// Uygulamanın bütün adresleri.
 abstract final class Adresler {
@@ -20,6 +21,8 @@ abstract final class Adresler {
   static const anaSayfa = '/';
   static String salon(int salonId) => '/salonlar/$salonId';
   static String masa(int masaId) => '/masalar/$masaId';
+  static String rezervasyonOlustur(int masaId) =>
+      '/masalar/$masaId/rezervasyon';
   static const salonYonetimi = '/yonetim/salonlar';
   static const salonEkle = '/yonetim/salonlar/yeni';
   static String salonDuzenle(int salonId) => '/yonetim/salonlar/$salonId';
@@ -96,6 +99,15 @@ GoRouter routerOlustur(AuthProvider auth) {
           final masaId = int.parse(state.pathParameters['masaId']!);
           return MasaDetayScreen(masaId: masaId);
         },
+        routes: [
+          GoRoute(
+            path: 'rezervasyon',
+            builder: (context, state) {
+              final masaId = int.parse(state.pathParameters['masaId']!);
+              return RezervasyonOlusturScreen(masaId: masaId);
+            },
+          ),
+        ],
       ),
       // /yonetim ile başlayan adresler oturumYonlendirmesi'nde sadece yöneticiye açık.
       GoRoute(
