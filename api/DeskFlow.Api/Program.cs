@@ -83,6 +83,7 @@ builder.Services.AddSwaggerGen(o =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenServisi>();
+builder.Services.AddScoped<RezervasyonServisi>();
 
 var app = builder.Build();
 

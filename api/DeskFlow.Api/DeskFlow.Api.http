@@ -228,3 +228,98 @@ Content-Type: application/json
 ### 26) Masayı sil (yönetici) -> 204 dönmeli
 DELETE {{api}}/api/masalar/{{yeniMasa.response.body.id}}
 Authorization: Bearer {{yoneticiGiris.response.body.token}}
+
+### ---------- Rezervasyonlar ----------
+# Önce 1) kayıt ve 2) giriş (öğrenci) istekleri çalıştırılmış, en az bir masa (id=1) olmalı.
+# Tarihleri ileri bir güne (en fazla 7 gün sonrasına) ve salonun açık olduğu saatlere göre değiştirin.
+# Saatler yerel saatle ve "Z" olmadan yazılır.
+
+### 27) Rezervasyon oluştur -> 201 dönmeli
+# @name yeniRezervasyon
+POST {{api}}/api/rezervasyonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaId": 1,
+  "baslangic": "2026-11-27T10:00:00",
+  "bitis": "2026-11-27T12:00:00"
+}
+
+### 28) Aynı masa, çakışan saat -> 409 dönmeli
+POST {{api}}/api/rezervasyonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaId": 1,
+  "baslangic": "2026-11-27T11:00:00",
+  "bitis": "2026-11-27T13:00:00"
+}
+
+### 29) Kural hatası (30 dakikadan kısa) -> 400 dönmeli
+POST {{api}}/api/rezervasyonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaId": 1,
+  "baslangic": "2026-11-27T15:00:00",
+  "bitis": "2026-11-27T15:10:00"
+}
+
+### 30) Kural hatası (4 saatten uzun) -> 400 dönmeli
+POST {{api}}/api/rezervasyonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaId": 1,
+  "baslangic": "2026-11-27T09:00:00",
+  "bitis": "2026-11-27T14:00:00"
+}
+
+### 31) Kural hatası (7 günden sonrası) -> 400 dönmeli
+POST {{api}}/api/rezervasyonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaId": 1,
+  "baslangic": "2027-03-01T10:00:00",
+  "bitis": "2027-03-01T11:00:00"
+}
+
+### 32) Olmayan masa -> 400 dönmeli
+POST {{api}}/api/rezervasyonlar
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "masaId": 9999,
+  "baslangic": "2026-11-27T10:00:00",
+  "bitis": "2026-11-27T11:00:00"
+}
+
+### 33) Benim rezervasyonlarım -> 200
+GET {{api}}/api/rezervasyonlar/benim
+Authorization: Bearer {{giris.response.body.token}}
+
+### 34) Token olmadan -> 401 dönmeli
+GET {{api}}/api/rezervasyonlar/benim
+
+### 35) Salon doluluğu (o günün dolu saatleri) -> 200
+GET {{api}}/api/salonlar/1/doluluk?tarih=2026-11-27
+Authorization: Bearer {{giris.response.body.token}}
+
+### 36) Başkasının rezervasyonunu iptal et (yönetici token'ı) -> 403 dönmeli
+DELETE {{api}}/api/rezervasyonlar/{{yeniRezervasyon.response.body.id}}
+Authorization: Bearer {{yoneticiGiris.response.body.token}}
+
+### 37) Kendi rezervasyonunu iptal et -> 204 dönmeli
+DELETE {{api}}/api/rezervasyonlar/{{yeniRezervasyon.response.body.id}}
+Authorization: Bearer {{giris.response.body.token}}
+
+### 38) Olmayan rezervasyon -> 404 dönmeli
+DELETE {{api}}/api/rezervasyonlar/9999
+Authorization: Bearer {{giris.response.body.token}}

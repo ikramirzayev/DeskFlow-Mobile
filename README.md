@@ -91,6 +91,19 @@ Swagger sayfasındaki **Authorize** butonuna giriş token'ı yapıştırılarak 
 
 İstekler `api/DeskFlow.Api/DeskFlow.Api.http` dosyasından VS Code **REST Client** eklentisiyle denenebilir.
 
+### Rezervasyon uç noktaları
+
+Hepsi giriş (token) gerektirir. Kurallar web projesindeki `RezervasyonServisi` ile aynıdır: 30 dakika ile 4 saat arası, aynı gün içinde, en fazla 7 gün sonrasına, salonun açılış-kapanış saatleri içinde, masa ve kullanıcı için çakışma yok.
+
+| Yöntem | Adres | Açıklama |
+|---|---|---|
+| GET | `/api/rezervasyonlar/benim` | Giriş yapan kullanıcının rezervasyonları |
+| POST | `/api/rezervasyonlar` | Rezervasyon oluşturur (201). Kural hatasında 400, masa/saat çakışmasında 409. Gövde: `{"masaId":1,"baslangic":"2026-11-27T10:00:00","bitis":"2026-11-27T12:00:00"}` (yerel saat, `Z` olmadan) |
+| DELETE | `/api/rezervasyonlar/{id}` | Rezervasyonu iptal eder (204, kayıt silinmez, durumu İptal olur). Kayıt yoksa 404, başkasınınsa 403, başlamışsa 409 |
+| GET | `/api/salonlar/{id}/doluluk?tarih=2026-11-27` | O gün salondaki her masanın dolu saat aralıkları (yoksa 404) |
+
+Yeni migration gerekmez; `Rezervasyon` tablosu ilk migration'da vardır.
+
 ### Migration ve çalıştırma
 
 ```bash
