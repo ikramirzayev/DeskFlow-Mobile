@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 import "package:provider/provider.dart";
 
+import "../core/router.dart";
 import "../providers/auth_provider.dart";
 import "home_screen.dart";
 import "profile_screen.dart";
@@ -57,8 +59,18 @@ class _MainShellState extends State<MainShell> {
 
     final index = _index.clamp(0, sayfalar.length - 1);
 
+    // Check-in butonu Ana Sayfa ve Rezervasyonlarım sekmelerinde görünür.
+    final checkInGoster = index <= 1;
+
     return Scaffold(
       body: sayfalar[index],
+      floatingActionButton: checkInGoster
+          ? FloatingActionButton.extended(
+              onPressed: () => context.push(Adresler.checkIn),
+              icon: const Icon(Icons.qr_code_scanner),
+              label: const Text("Check-in"),
+            )
+          : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: index,
         onDestinationSelected: (i) => setState(() => _index = i),

@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
+import '../screens/checkin_screen.dart';
 import '../screens/gecici_ekran.dart';
 import '../screens/login_screen.dart';
 import '../screens/main_shell.dart';
@@ -27,6 +28,7 @@ abstract final class Adresler {
   static const salonEkle = '/yonetim/salonlar/yeni';
   static String salonDuzenle(int salonId) => '/yonetim/salonlar/$salonId';
   static const masaYonetimi = '/yonetim/masalar';
+  static const checkIn = '/checkin';
 }
 
 /// Oturum durumuna göre gidilmek istenen adresin yerine nereye gidileceğini söyler.
@@ -108,6 +110,11 @@ GoRouter routerOlustur(AuthProvider auth) {
             },
           ),
         ],
+      ),
+      // Giriş yapmış herkes (öğrenci ve yönetici) check-in yapabilir.
+      GoRoute(
+        path: Adresler.checkIn,
+        builder: (context, state) => const CheckInScreen(),
       ),
       // /yonetim ile başlayan adresler oturumYonlendirmesi'nde sadece yöneticiye açık.
       GoRoute(
