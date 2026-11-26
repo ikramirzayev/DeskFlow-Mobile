@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 
 import '../core/config.dart';
 
-
 class ApiHatasi implements Exception {
   final String mesaj;
   final int? durumKodu;
@@ -13,44 +12,44 @@ class ApiHatasi implements Exception {
   String toString() => mesaj;
 }
 
-
 class ApiService {
   final Dio dio;
 
   String? _token;
 
-
   void Function()? oturumDustu;
 
   ApiService({Dio? dio})
-      : dio = dio ??
-            Dio(
-              BaseOptions(
-                baseUrl: AppConfig.apiBaseUrl,
-                connectTimeout: const Duration(seconds: 10),
-                receiveTimeout: const Duration(seconds: 15),
-                contentType: 'application/json',
-              ),
-            ) {
+    : dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: AppConfig.apiBaseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 15),
+              contentType: 'application/json',
+            ),
+          ) {
     this.dio.interceptors.add(
-          InterceptorsWrapper(
-            onRequest: (options, handler) {
-              final token = _token;
-              if (token != null) {
-                options.headers['Authorization'] = 'Bearer $token';
-              }
-              handler.next(options);
-            },
-            onError: (e, handler) {
-              final tokenliIstek =
-                  e.requestOptions.headers.containsKey('Authorization');
-              if (e.response?.statusCode == 401 && tokenliIstek) {
-                oturumDustu?.call();
-              }
-              handler.next(e);
-            },
-          ),
-        );
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final token = _token;
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          handler.next(options);
+        },
+        onError: (e, handler) {
+          final tokenliIstek = e.requestOptions.headers.containsKey(
+            'Authorization',
+          );
+          if (e.response?.statusCode == 401 && tokenliIstek) {
+            oturumDustu?.call();
+          }
+          handler.next(e);
+        },
+      ),
+    );
   }
 
   void tokenAyarla(String? token) => _token = token;
@@ -79,12 +78,17 @@ class ApiService {
 
     switch (kod) {
       case 400:
-        return ApiHatasi(_dogrulamaMesajlari(veri) ?? 'Girilen bilgiler hatalı.',
-            durumKodu: kod);
+        return ApiHatasi(
+          sunucuMesaji ??
+              _dogrulamaMesajlari(veri) ??
+              'Girilen bilgiler hatalı.',
+          durumKodu: kod,
+        );
       case 401:
         return ApiHatasi(
-            sunucuMesaji ?? 'Oturum süresi doldu, lütfen tekrar giriş yapın.',
-            durumKodu: kod);
+          sunucuMesaji ?? 'Oturum süresi doldu, lütfen tekrar giriş yapın.',
+          durumKodu: kod,
+        );
       case 403:
         return ApiHatasi('Bu işlem için yetkiniz yok.', durumKodu: kod);
       case 404:
@@ -93,8 +97,9 @@ class ApiService {
         return ApiHatasi(sunucuMesaji ?? 'İşlem yapılamadı.', durumKodu: kod);
       default:
         return ApiHatasi(
-            'Beklenmeyen bir hata oluştu${kod != null ? ' ($kod)' : ''}.',
-            durumKodu: kod);
+          'Beklenmeyen bir hata oluştu${kod != null ? ' ($kod)' : ''}.',
+          durumKodu: kod,
+        );
     }
   }
 
