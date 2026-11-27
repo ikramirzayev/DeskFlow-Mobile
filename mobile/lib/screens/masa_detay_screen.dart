@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+
+import '../core/router.dart';
 
 import '../models/masa.dart';
 import '../services/api_service.dart';
@@ -108,13 +111,8 @@ class _MasaDetayScreenState extends State<MasaDetayScreen> {
             child: SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Rezervasyon 5. haftada eklenecek'),
-                    ),
-                  );
-                },
+                onPressed: () =>
+                    context.push(Adresler.rezervasyonOlustur(masa.id)),
                 child: const Text('Rezerve et'),
               ),
             ),

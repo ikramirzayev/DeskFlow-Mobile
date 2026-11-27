@@ -83,6 +83,11 @@ builder.Services.AddSwaggerGen(o =>
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenServisi>();
+builder.Services.AddScoped<RezervasyonServisi>();
+builder.Services.AddScoped<CheckInServisi>();
+
+// Her dakika Gelmedi / Tamamlandi durumlarını günceller (içinde IServiceScopeFactory ile scope açar).
+builder.Services.AddHostedService<DurumGuncelleyici>();
 
 var app = builder.Build();
 

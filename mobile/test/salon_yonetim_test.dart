@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -11,33 +7,7 @@ import 'package:deskflow_mobile/screens/salon_form_screen.dart';
 import 'package:deskflow_mobile/services/api_service.dart';
 import 'package:deskflow_mobile/services/salon_service.dart';
 
-/// Giden isteği kaydeden ve verilen cevabı dönen sahte bağlantı.
-class KaydedenAdapter implements HttpClientAdapter {
-  KaydedenAdapter(this.durumKodu, this.cevap);
-
-  final int durumKodu;
-  final Object cevap;
-  RequestOptions? sonIstek;
-
-  @override
-  Future<ResponseBody> fetch(
-    RequestOptions options,
-    Stream<Uint8List>? requestStream,
-    Future<void>? cancelFuture,
-  ) async {
-    sonIstek = options;
-    return ResponseBody.fromString(
-      jsonEncode(cevap),
-      durumKodu,
-      headers: {
-        Headers.contentTypeHeader: [Headers.jsonContentType],
-      },
-    );
-  }
-
-  @override
-  void close({bool force = false}) {}
-}
+import 'yardimcilar.dart';
 
 const ornekSalonJson = {
   'id': 7,
@@ -58,9 +28,6 @@ const ornekIstek = SalonKaydet(
   kapanisSaati: TimeOfDay(hour: 21, minute: 0),
   aktifMi: true,
 );
-
-ApiService apiIle(HttpClientAdapter adapter) =>
-    ApiService(dio: Dio(BaseOptions(baseUrl: 'http://test'))..httpClientAdapter = adapter);
 
 void main() {
   group('SalonKaydet', () {

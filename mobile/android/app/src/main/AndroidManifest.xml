@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- API'ye istek atabilmek için internet izni -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- QR ile check-in için kamera izni (mobile_scanner) -->
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:label="deskflow_mobile"
         android:name="${applicationName}"
