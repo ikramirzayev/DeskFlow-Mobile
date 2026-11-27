@@ -7,6 +7,7 @@ import "../providers/auth_provider.dart";
 import "home_screen.dart";
 import "profile_screen.dart";
 import "yonetim_screen.dart";
+import "rezervasyonlarim_screen.dart";
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -25,10 +26,7 @@ class _MainShellState extends State<MainShell> {
     // Yönetim sekmesi sadece yöneticiye eklenir.
     final sayfalar = <Widget>[
       const HomeScreen(),
-      Scaffold(
-        appBar: AppBar(title: const Text("Rezervasyonlarım")),
-        body: const Center(child: Text("yakında")),
-      ),
+      const RezervasyonlarimScreen(),
       if (yoneticiMi) const YonetimScreen(),
       const ProfileScreen(),
     ];

@@ -1,4 +1,4 @@
-/// API'deki RezervasyonDto'nun karşılığı (POST /api/rezervasyonlar cevabı).
+/// API'deki RezervasyonDto'nun karşılığı (POST ve GET /api/rezervasyonlar/benim).
 class Rezervasyon {
   final int id;
   final int masaId;
@@ -7,6 +7,7 @@ class Rezervasyon {
   final DateTime baslangic;
   final DateTime bitis;
   final String durum;
+  final bool iptalEdilebilir;
 
   const Rezervasyon({
     required this.id,
@@ -16,6 +17,7 @@ class Rezervasyon {
     required this.baslangic,
     required this.bitis,
     required this.durum,
+    this.iptalEdilebilir = false,
   });
 
   factory Rezervasyon.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class Rezervasyon {
       baslangic: DateTime.parse(json['baslangic'] as String).toLocal(),
       bitis: DateTime.parse(json['bitis'] as String).toLocal(),
       durum: json['durum'] as String? ?? '',
+      iptalEdilebilir: json['iptalEdilebilir'] as bool? ?? false,
     );
   }
 }
