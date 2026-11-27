@@ -104,6 +104,17 @@ Hepsi giriş (token) gerektirir. Kurallar web projesindeki `RezervasyonServisi` 
 
 Yeni migration gerekmez; `Rezervasyon` tablosu ilk migration'da vardır.
 
+<<<<<<< HEAD
+### Check-in uç noktası
+
+| Yöntem | Adres | Açıklama |
+|---|---|---|
+| POST | `/api/checkin` | Gövde: `{"qrKod":"..."}`. Başarılıysa 200 ve rezervasyon bilgisi (durum `Aktif` olur, `CheckInKayitlari`'na kayıt düşer). Masa yoksa ya da bekleyen rezervasyon yoksa 404; erken geldiyse ya da geç kaldıysa 400. Hata cevabı `{"mesaj":"..."}` |
+
+Check-in penceresi başlangıçtan 15 dk önce ile 15 dk sonra arasıdır. `DurumGuncelleyici` her dakika: başlangıcından 15 dk geçmiş ve check-in yapılmamış rezervasyonları `Gelmedi`, bitişi geçmiş `Aktif` rezervasyonları `Tamamlandi` yapar.
+
+=======
+>>>>>>> origin/main
 ### Migration ve çalıştırma
 
 ```bash

@@ -323,3 +323,54 @@ Authorization: Bearer {{giris.response.body.token}}
 ### 38) Olmayan rezervasyon -> 404 dönmeli
 DELETE {{api}}/api/rezervasyonlar/9999
 Authorization: Bearer {{giris.response.body.token}}
+<<<<<<< HEAD
+
+### ---------- Check-in ----------
+# Önce 27) ile başlangıcı şu andan birkaç dakika sonra olan bir rezervasyon yapın.
+# QR kodu pgAdmin'den alın: SELECT "Id","MasaNo","QrKod" FROM "Masalar";
+
+### 39) Check-in (pencere içinde) -> 200 ve rezervasyon bilgisi (durum Aktif)
+POST {{api}}/api/checkin
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "qrKod": "DESKFLOW-S1-M01"
+}
+
+### 40) Olmayan QR kodu -> 404 dönmeli
+POST {{api}}/api/checkin
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "qrKod": "YOK-BOYLE-BIR-KOD"
+}
+
+### 41) Aynı kodla tekrar (artık Beklemede rezervasyon yok) -> 404 dönmeli
+POST {{api}}/api/checkin
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "qrKod": "DESKFLOW-S1-M01"
+}
+
+### 42) Rezervasyon başlangıcına 15 dk'dan fazla varsa -> 400 (erken) dönmeli
+POST {{api}}/api/checkin
+Authorization: Bearer {{giris.response.body.token}}
+Content-Type: application/json
+
+{
+  "qrKod": "DESKFLOW-S1-M02"
+}
+
+### 43) Token olmadan -> 401 dönmeli
+POST {{api}}/api/checkin
+Content-Type: application/json
+
+{
+  "qrKod": "DESKFLOW-S1-M01"
+}
+=======
+>>>>>>> origin/main

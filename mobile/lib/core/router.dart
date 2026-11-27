@@ -5,6 +5,9 @@ import '../screens/checkin_screen.dart';
 import '../screens/gecici_ekran.dart';
 import '../screens/login_screen.dart';
 import '../screens/main_shell.dart';
+import '../models/masa.dart';
+import '../screens/masa_form_screen.dart';
+import '../screens/masa_yonetim_screen.dart';
 import '../models/salon.dart';
 import '../screens/register_screen.dart';
 import '../screens/salon_form_screen.dart';
@@ -28,6 +31,11 @@ abstract final class Adresler {
   static const salonEkle = '/yonetim/salonlar/yeni';
   static String salonDuzenle(int salonId) => '/yonetim/salonlar/$salonId';
   static const masaYonetimi = '/yonetim/masalar';
+<<<<<<< HEAD
+  static const masaEkle = '/yonetim/masalar/yeni';
+  static String masaDuzenle(int masaId) => '/yonetim/masalar/$masaId';
+=======
+>>>>>>> origin/main
   static const checkIn = '/checkin';
 }
 
@@ -139,10 +147,23 @@ GoRouter routerOlustur(AuthProvider auth) {
       ),
       GoRoute(
         path: Adresler.masaYonetimi,
-        builder: (context, state) => const GeciciEkran(
-          baslik: 'Masa Yönetimi',
-          mesaj: 'Masa ekleme, düzenleme ve silme 5. haftada eklenecek.',
-        ),
+        builder: (context, state) => const MasaYonetimScreen(),
+        routes: [
+          // 'yeni' önce gelmeli; yoksa ':masaId' onu sayı sanıp yakalardı.
+          GoRoute(
+            path: 'yeni',
+            builder: (context, state) => const MasaFormScreen(),
+          ),
+          GoRoute(
+            path: ':masaId',
+            // Düzenlenecek masa listeden 'extra' ile gelir; gelmediyse listeye dön,
+            // yanlışlıkla yeni masa eklenmesin.
+            redirect: (context, state) =>
+                state.extra is Masa ? null : Adresler.masaYonetimi,
+            builder: (context, state) =>
+                MasaFormScreen(masa: state.extra as Masa?),
+          ),
+        ],
       ),
     ],
     errorBuilder: (context, state) => const GeciciEkran(
