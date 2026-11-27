@@ -31,8 +31,11 @@ abstract final class Adresler {
   static const salonEkle = '/yonetim/salonlar/yeni';
   static String salonDuzenle(int salonId) => '/yonetim/salonlar/$salonId';
   static const masaYonetimi = '/yonetim/masalar';
+<<<<<<< HEAD
   static const masaEkle = '/yonetim/masalar/yeni';
   static String masaDuzenle(int masaId) => '/yonetim/masalar/$masaId';
+=======
+>>>>>>> origin/main
   static const checkIn = '/checkin';
 }
 

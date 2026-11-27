@@ -323,6 +323,7 @@ Authorization: Bearer {{giris.response.body.token}}
 ### 38) Olmayan rezervasyon -> 404 dönmeli
 DELETE {{api}}/api/rezervasyonlar/9999
 Authorization: Bearer {{giris.response.body.token}}
+<<<<<<< HEAD
 
 ### ---------- Check-in ----------
 # Önce 27) ile başlangıcı şu andan birkaç dakika sonra olan bir rezervasyon yapın.
@@ -371,3 +372,5 @@ Content-Type: application/json
 {
   "qrKod": "DESKFLOW-S1-M01"
 }
+=======
+>>>>>>> origin/main
