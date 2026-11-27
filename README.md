@@ -104,7 +104,6 @@ Hepsi giriş (token) gerektirir. Kurallar web projesindeki `RezervasyonServisi` 
 
 Yeni migration gerekmez; `Rezervasyon` tablosu ilk migration'da vardır.
 
-<<<<<<< HEAD
 ### Check-in uç noktası
 
 | Yöntem | Adres | Açıklama |
@@ -113,8 +112,6 @@ Yeni migration gerekmez; `Rezervasyon` tablosu ilk migration'da vardır.
 
 Check-in penceresi başlangıçtan 15 dk önce ile 15 dk sonra arasıdır. `DurumGuncelleyici` her dakika: başlangıcından 15 dk geçmiş ve check-in yapılmamış rezervasyonları `Gelmedi`, bitişi geçmiş `Aktif` rezervasyonları `Tamamlandi` yapar.
 
-=======
->>>>>>> origin/main
 ### Migration ve çalıştırma
 
 ```bash
